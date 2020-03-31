@@ -10,8 +10,10 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import it.polito.tdp.lab04.DAO.CorsoDAO;
+import it.polito.tdp.lab04.DAO.StudenteDAO;
 import it.polito.tdp.lab04.model.Corso;
 import it.polito.tdp.lab04.model.Model;
+import it.polito.tdp.lab04.model.Studente;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -24,8 +26,9 @@ import javafx.scene.control.TextField;
 
 public class FXMLController {
 	ObservableList<String> observList=FXCollections.observableArrayList();
-	CorsoDAO c= new CorsoDAO();
-
+	CorsoDAO corsoDB= new CorsoDAO();
+	StudenteDAO studenteDB= new StudenteDAO();
+	
     @FXML // ResourceBundle that was given to the FXMLLoader
     private ResourceBundle resources;
 
@@ -87,13 +90,28 @@ public class FXMLController {
 
     @FXML
     void doShowNomeCognomeStudente(ActionEvent event) {
-
+    	Studente s;
+    	String matrString= txtIdStudente.getText();
+    	Integer matricola = null;
+    	try {
+    		matricola= Integer.parseInt(matrString);
+    	}catch(NumberFormatException e){
+    		e.printStackTrace();
+    		txtOutput.setText("Inserire una matricola composta da 6 cifre");
+    	}
+    	s=studenteDB.getStudente(matricola);
+    	if(s==null) {
+    		txtOutput.setText("La matricola inserita non corrisponde ad alcuno studente");
+    		return;
+    	}
+    	txtNomeStudente.setText(s.getNome());
+    	txtCognomeSTudente.setText(s.getCognome());
     }
     
     private void loadData() {
     	List<String> corsi=new ArrayList<String>();
     	corsi.add("Corsi");
-    	for(Corso delDB: c.getTuttiICorsi()) {
+    	for(Corso delDB: corsoDB.getTuttiICorsi()) {
     		corsi.add(delDB.getNome());
     	}
     	observList.addAll(corsi);
