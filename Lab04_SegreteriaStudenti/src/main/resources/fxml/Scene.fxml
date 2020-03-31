@@ -7,6 +7,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -25,39 +26,38 @@
             <HBox spacing="10.0">
                <children>
                   <Label text="Corso:" />
-                  <ChoiceBox />
+                  <ChoiceBox fx:id="boxChoice" />
                </children>
                <padding>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </padding>
             </HBox>
-            <Button mnemonicParsing="false" text="Button" />
+            <Button fx:id="btnCercaIscrittiCorso" mnemonicParsing="false" onAction="#CercaIscrittiCorso" text="Cerca iscritti corso" />
             <HBox spacing="10.0">
                <children>
                   <Label text="Studente:" />
-                  <TextField />
-                  <CheckBox mnemonicParsing="false" />
-                  <TextField />
-                  <TextField />
+                  <TextField fx:id="txtIdStudente" />
+                  <CheckBox fx:id="checkBox" mnemonicParsing="false" onAction="#doShowNomeCognomeStudente" />
+                  <TextField fx:id="txtNomeStudente" promptText="Nome" />
+                  <TextField fx:id="txtCognomeSTudente" promptText="Cognome" />
                </children>
             </HBox>
-            <HBox alignment="TOP_CENTER">
+            <AnchorPane>
                <children>
-                  <Button alignment="TOP_LEFT" mnemonicParsing="false" text="Button" HBox.hgrow="NEVER" />
-                  <Button mnemonicParsing="false" text="Button" />
+                  <Button fx:id="btnCorsi" alignment="TOP_LEFT" mnemonicParsing="false" onAction="#CercaCorsi" text="Cerca Corsi" AnchorPane.rightAnchor="0.0" />
+                  <Button fx:id="btnIscrivi" mnemonicParsing="false" onAction="#IscriviStudente" text="Iscrivi" AnchorPane.leftAnchor="0.0" />
                </children>
-            </HBox>
-            <TextArea>
-               <padding>
-                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-               </padding>
-            </TextArea>
+            </AnchorPane>
+            <TextArea fx:id="txtOutput" />
             <HBox alignment="BOTTOM_RIGHT">
                <children>
-                  <Button alignment="BOTTOM_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" text="Button" />
+                  <Button fx:id="btnReset" alignment="BOTTOM_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" onAction="#doReset" text="Reset" />
                </children>
             </HBox>
          </children>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="3.0" />
+         </padding>
       </VBox>
    </center>
 </BorderPane>
