@@ -48,7 +48,7 @@
                   <Button fx:id="btnIscrivi" mnemonicParsing="false" onAction="#IscriviStudente" text="Iscrivi" AnchorPane.leftAnchor="0.0" />
                </children>
             </AnchorPane>
-            <TextArea fx:id="txtOutput" />
+            <TextArea fx:id="txtOutput" disable="true" editable="false" />
             <HBox alignment="BOTTOM_RIGHT">
                <children>
                   <Button fx:id="btnReset" alignment="BOTTOM_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" onAction="#doReset" text="Reset" />
