@@ -69,7 +69,10 @@ public class FXMLController {
 
     @FXML
     void doReset(ActionEvent event) {
-
+    	txtIdStudente.clear();
+    	txtNomeStudente.clear();
+    	this.txtCognomeSTudente.clear();
+    	this.txtOutput.clear();
     }
 
     @FXML
@@ -89,6 +92,5 @@ public class FXMLController {
         assert btnIscrivi != null : "fx:id=\"btnIscrivi\" was not injected: check your FXML file 'Scene.fxml'.";
         assert txtOutput != null : "fx:id=\"txtOutput\" was not injected: check your FXML file 'Scene.fxml'.";
         assert btnReset != null : "fx:id=\"btnReset\" was not injected: check your FXML file 'Scene.fxml'.";
-
     }
 }

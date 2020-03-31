@@ -38,8 +38,8 @@
                   <Label text="Studente:" />
                   <TextField fx:id="txtIdStudente" />
                   <CheckBox fx:id="checkBox" mnemonicParsing="false" onAction="#doShowNomeCognomeStudente" />
-                  <TextField fx:id="txtNomeStudente" promptText="Nome" />
-                  <TextField fx:id="txtCognomeSTudente" promptText="Cognome" />
+                  <TextField fx:id="txtNomeStudente" disable="true" editable="false" promptText="Nome" />
+                  <TextField fx:id="txtCognomeSTudente" disable="true" editable="false" promptText="Cognome" />
                </children>
             </HBox>
             <AnchorPane>
