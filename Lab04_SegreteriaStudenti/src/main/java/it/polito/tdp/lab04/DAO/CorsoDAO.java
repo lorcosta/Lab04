@@ -12,8 +12,9 @@ import it.polito.tdp.lab04.model.Studente;
 
 public class CorsoDAO {
 	
-	/*
+	/**
 	 * Ottengo tutti i corsi salvati nel Db
+	 * @return {@link List}<{@link Corso}>
 	 */
 	public List<Corso> getTuttiICorsi() {
 
@@ -54,15 +55,17 @@ public class CorsoDAO {
 	}
 	
 	
-	/*
+	/**
 	 * Dato un codice insegnamento, ottengo il corso
 	 */
 	public void getCorso(Corso corso) {
 		// TODO
 	}
 
-	/*
+	/**
 	 * Ottengo tutti gli studenti iscritti al Corso
+	 * @param {@link Corso}
+	 * @return {@link List}<{@link Studente}>
 	 */
 	public List<Studente> getStudentiIscrittiAlCorso(Corso corso) {
 		final String sql= "SELECT s.matricola,s.nome,s.cognome,s.CDS "
@@ -92,13 +95,58 @@ public class CorsoDAO {
 		}
 	}
 
-	/*
+	/**
 	 * Data una matricola ed il codice insegnamento, iscrivi lo studente al corso.
+	 * @param {@link Studente, Corso}
+	 * @return {@code true} se iscrizione va a buon fine, {@code false} altrimenti
 	 */
 	public boolean iscriviStudenteACorso(Studente studente, Corso corso) {
-		// TODO
+		
+		String sql="INSERT INTO iscrizione VALUES (?,?)";
+		boolean ritorno=false;
+		try {
+			Connection conn=ConnectDB.getConnection();
+			PreparedStatement st= conn.prepareStatement(sql);
+			st.setInt(1, studente.getMatricola());
+			st.setString(2, corso.getNome());
+			Integer rs=st.executeUpdate();
+			if(rs.equals(1)) {
+				ritorno=true;
+			}
+			conn.close();
+			
+		}catch(SQLException e) {
+			throw new RuntimeException("Errore DB",e);
+		}
 		// ritorna true se l'iscrizione e' avvenuta con successo
-		return false;
+		return ritorno;
 	}
-
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

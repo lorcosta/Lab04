@@ -6,6 +6,7 @@ package it.polito.tdp.lab04;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -67,7 +68,41 @@ public class FXMLController {
 
     @FXML
     void CercaCorsi(ActionEvent event) {
-
+    	txtOutput.clear();
+    	Studente s;
+    	String matrString= txtIdStudente.getText();
+    	Integer matricola = null;
+    	if(matrString.length()!=6) {//Controllo che numero di caratteri sia corretto
+    		txtOutput.setText("Matricola inserita non valida! Inserire una matricola composta da 6 cifre");
+    		return;
+    	}
+    	try {//Provo a trasformare la matricola in un intero, così se ci sono lettere restituisco errore
+    		matricola= Integer.parseInt(matrString);
+    	}catch(NumberFormatException e){
+    		e.printStackTrace();
+    		txtOutput.setText("Inserire una matricola composta da SOLE cifre");
+    	}
+    	s=studenteDB.getStudente(matricola);//Interrogo DB per ottenere lo studente
+    	if(s==null) {//se lo studente ritorno è null allora la matricola non c'è nel DB
+    		txtOutput.setText("La matricola inserita non corrisponde ad alcuno studente");
+    		return;
+    	}
+    	if(boxChoice.getValue()!=null) {//Controllo se uno studente è iscritto ad un determinato corso
+    		String nomeCorso= boxChoice.getValue();
+        	Corso corso= new Corso(null,null,nomeCorso,null);
+    		if(studenteDB.isStudenteIscrittoAlCorso(matricola, corso))
+    			txtOutput.setText("Studente gia' iscritto a questo corso");
+    		else txtOutput.setText("Studente non ancora iscritto a questo corso");
+    		return;
+    	}
+    	List<Corso> corsiIscritto= new LinkedList<Corso>(studenteDB.getCorsiStudente(matricola));//Lista dei corsi che frequenta lo studente 
+    	if(corsiIscritto.size()==0) {//Se la lista è vuota significa che lo studente non è iscritto ad alcun corso
+    		txtOutput.setText("Lo studente non è iscritto ad alcun corso");
+    		return;
+    	}
+    	for(Corso c:corsiIscritto) {//Se lo studente è presente visualizzo tutti i corsi ai quali è iscritto
+    		txtOutput.appendText(c.toString()+"\n");
+    	}
     }
 
     @FXML
@@ -75,7 +110,12 @@ public class FXMLController {
     	String nomeCorso= boxChoice.getValue();
     	Corso corso= new Corso(null,null,nomeCorso,null);
     	txtOutput.clear();
-    	for(Studente s:corsoDB.getStudentiIscrittiAlCorso(corso)) {
+    	List<Studente> studentiIscrittiAlCorso= new LinkedList<Studente>(corsoDB.getStudentiIscrittiAlCorso(corso));
+    	if(studentiIscrittiAlCorso.size()==0) {//se la lista è vuota significa che non ci sono studenti iscritti a questo corso
+    		txtOutput.setText("Non ci sono studenti iscritti a questo corso");
+    		return;
+    	}
+    	for(Studente s:studentiIscrittiAlCorso) {
     		String nome=String.format("%-10s",s.getNome());
     		String cognome=String.format("%-30s",s.getCognome());
     		String matr=String.format("%-30s",s.getMatricola());
@@ -88,7 +128,35 @@ public class FXMLController {
 
     @FXML
     void IscriviStudente(ActionEvent event) {
-
+    	String corsoString=boxChoice.getValue();
+    	Corso corso=new Corso(null,null,corsoString,null);
+    	Studente s;
+    	String matrString= txtIdStudente.getText();
+    	Integer matricola = null;
+    	if(matrString.length()!=6) {//Controllo che numero di caratteri sia corretto
+    		txtOutput.setText("Matricola inserita non valida! Inserire una matricola composta da 6 cifre");
+    		return;
+    	}
+    	try {//Provo a trasformare la matricola in un intero, così se ci sono lettere restituisco errore
+    		matricola= Integer.parseInt(matrString);
+    	}catch(NumberFormatException e){
+    		e.printStackTrace();
+    		txtOutput.setText("Inserire una matricola composta da SOLE cifre");
+    	}
+    	
+    	s=studenteDB.getStudente(matricola);//Interrogo DB per ottenere lo studente
+    	if(s==null) {//se lo studente ritorno è null allora la matricola non c'è nel DB
+    		txtOutput.setText("La matricola inserita non corrisponde ad alcuno studente");
+    		return;
+    	}
+    	if(boxChoice.getValue()!=null) {//Controllo se uno studente è iscritto ad un determinato corso
+    		String nomeCorso= boxChoice.getValue();
+    		if(studenteDB.isStudenteIscrittoAlCorso(matricola, corso))
+    			txtOutput.setText("Studente gia' iscritto a questo corso");
+    		return;
+    	}
+    	if(corsoDB.iscriviStudenteACorso(s, corso))
+    		txtOutput.setText("Studente iscritto con successo");
     }
 
     @FXML
@@ -122,9 +190,8 @@ public class FXMLController {
     
     private void loadData() {
     	List<String> corsi=new ArrayList<String>();
-    	corsi.add("Corsi");
     	for(Corso delDB: corsoDB.getTuttiICorsi()) {
-    		corsi.add(delDB.getNome());
+    		corsi.add(delDB.getNome()+" "+delDB.getCodice());
     	}
     	observList.addAll(corsi);
     	boxChoice.getItems().addAll(corsi);
