@@ -1,5 +1,7 @@
 package it.polito.tdp.lab04.DAO;
 
+import it.polito.tdp.lab04.model.Corso;
+
 public class TestDB {
 
 	public static void main(String[] args) {
@@ -13,6 +15,10 @@ public class TestDB {
 		
 		StudenteDAO sdao= new StudenteDAO();
 		sdao.getStudente(200482);
+		
+		Corso corso=new Corso(null,null,"Analisi dei sistemi economici",null);
+		System.out.println("Stampo tutti gli studenti iscritti al corso ");
+		cdao.getStudentiIscrittiAlCorso(corso);
 	}
 
 }

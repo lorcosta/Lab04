@@ -24,7 +24,7 @@ public class StudenteDAO {
 			if(rs.next()) {
 				String nome=rs.getString("nome");
 				String cognome=rs.getString("cognome");
-				System.out.println(nome+" "+cognome);
+				//System.out.println(nome+" "+cognome);
 				s= new Studente(null, nome,cognome,null);
 			}
 			conn.close();

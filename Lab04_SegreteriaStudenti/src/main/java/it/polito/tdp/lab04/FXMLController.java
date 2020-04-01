@@ -72,6 +72,17 @@ public class FXMLController {
 
     @FXML
     void CercaIscrittiCorso(ActionEvent event) {
+    	String nomeCorso= boxChoice.getValue();
+    	Corso corso= new Corso(null,null,nomeCorso,null);
+    	txtOutput.clear();
+    	for(Studente s:corsoDB.getStudentiIscrittiAlCorso(corso)) {
+    		String nome=String.format("%-10s",s.getNome());
+    		String cognome=String.format("%-30s",s.getCognome());
+    		String matr=String.format("%-30s",s.getMatricola());
+    		String CDS=String.format("%-30s",s.getCDS());
+    		String strBuilder=matr+" "+nome+" "+cognome+" "+CDS;
+    		txtOutput.appendText(strBuilder+"\n");
+    	}
 
     }
 
@@ -86,6 +97,7 @@ public class FXMLController {
     	txtNomeStudente.clear();
     	this.txtCognomeSTudente.clear();
     	this.txtOutput.clear();
+    	boxChoice.setValue(null);
     }
 
     @FXML

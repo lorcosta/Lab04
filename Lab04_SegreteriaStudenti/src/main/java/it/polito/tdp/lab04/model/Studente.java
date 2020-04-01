@@ -63,6 +63,10 @@ public class Studente {
 			return false;
 		return true;
 	}
+	@Override
+	public String toString() {
+		return matricola + "     " + nome + "     " + cognome + "     " + CDS;
+	}
 	
 	
 
