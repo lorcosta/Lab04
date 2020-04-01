@@ -129,7 +129,8 @@ public class FXMLController {
     @FXML
     void IscriviStudente(ActionEvent event) {
     	String corsoString=boxChoice.getValue();
-    	Corso corso=new Corso(null,null,corsoString,null);
+    	String[]corsoTemp=corsoString.split("-");
+    	Corso corso=new Corso(corsoTemp[1],null,corsoTemp[0],null);
     	Studente s;
     	String matrString= txtIdStudente.getText();
     	Integer matricola = null;
@@ -151,9 +152,10 @@ public class FXMLController {
     	}
     	if(boxChoice.getValue()!=null) {//Controllo se uno studente è iscritto ad un determinato corso
     		String nomeCorso= boxChoice.getValue();
-    		if(studenteDB.isStudenteIscrittoAlCorso(matricola, corso))
+    		if(studenteDB.isStudenteIscrittoAlCorso(matricola, corso)) {
     			txtOutput.setText("Studente gia' iscritto a questo corso");
-    		return;
+        		return;
+    		}
     	}
     	if(corsoDB.iscriviStudenteACorso(s, corso))
     		txtOutput.setText("Studente iscritto con successo");
@@ -191,7 +193,7 @@ public class FXMLController {
     private void loadData() {
     	List<String> corsi=new ArrayList<String>();
     	for(Corso delDB: corsoDB.getTuttiICorsi()) {
-    		corsi.add(delDB.getNome()+" "+delDB.getCodice());
+    		corsi.add(delDB.getNome()+"-"+delDB.getCodice());
     	}
     	observList.addAll(corsi);
     	boxChoice.getItems().addAll(corsi);

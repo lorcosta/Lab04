@@ -108,7 +108,7 @@ public class CorsoDAO {
 			Connection conn=ConnectDB.getConnection();
 			PreparedStatement st= conn.prepareStatement(sql);
 			st.setInt(1, studente.getMatricola());
-			st.setString(2, corso.getNome());
+			st.setString(2, corso.getCodice());
 			Integer rs=st.executeUpdate();
 			if(rs.equals(1)) {
 				ritorno=true;
