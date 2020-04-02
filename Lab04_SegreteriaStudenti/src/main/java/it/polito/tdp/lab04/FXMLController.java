@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
-
 import it.polito.tdp.lab04.DAO.CorsoDAO;
 import it.polito.tdp.lab04.DAO.StudenteDAO;
 import it.polito.tdp.lab04.model.Corso;
@@ -27,8 +26,7 @@ import javafx.scene.control.TextField;
 
 public class FXMLController {
 	ObservableList<String> observList=FXCollections.observableArrayList();
-	CorsoDAO corsoDB= new CorsoDAO();
-	StudenteDAO studenteDB= new StudenteDAO();
+	Model model = new Model();
 	
     @FXML // ResourceBundle that was given to the FXMLLoader
     private ResourceBundle resources;
@@ -82,7 +80,7 @@ public class FXMLController {
     		e.printStackTrace();
     		txtOutput.setText("Inserire una matricola composta da SOLE cifre");
     	}
-    	s=studenteDB.getStudente(matricola);//Interrogo DB per ottenere lo studente
+    	s=model.getStudente(matricola);//Interrogo DB per ottenere lo studente
     	if(s==null) {//se lo studente ritorno è null allora la matricola non c'è nel DB
     		txtOutput.setText("La matricola inserita non corrisponde ad alcuno studente");
     		return;
@@ -90,12 +88,12 @@ public class FXMLController {
     	if(boxChoice.getValue()!=null) {//Controllo se uno studente è iscritto ad un determinato corso
     		String nomeCorso= boxChoice.getValue();
         	Corso corso= new Corso(null,null,nomeCorso,null);
-    		if(studenteDB.isStudenteIscrittoAlCorso(matricola, corso))
+    		if(model.isStudenteIscrittoAlCorso(matricola, corso))
     			txtOutput.setText("Studente gia' iscritto a questo corso");
     		else txtOutput.setText("Studente non ancora iscritto a questo corso");
     		return;
     	}
-    	List<Corso> corsiIscritto= new LinkedList<Corso>(studenteDB.getCorsiStudente(matricola));//Lista dei corsi che frequenta lo studente 
+    	List<Corso> corsiIscritto= new LinkedList<Corso>(model.getCorsiStudente(matricola));//Lista dei corsi che frequenta lo studente 
     	if(corsiIscritto.size()==0) {//Se la lista è vuota significa che lo studente non è iscritto ad alcun corso
     		txtOutput.setText("Lo studente non è iscritto ad alcun corso");
     		return;
@@ -107,10 +105,11 @@ public class FXMLController {
 
     @FXML
     void CercaIscrittiCorso(ActionEvent event) {
-    	String nomeCorso= boxChoice.getValue();
-    	Corso corso= new Corso(null,null,nomeCorso,null);
+    	String corsoString=boxChoice.getValue();
+    	String[]corsoTemp=corsoString.split("-");
+    	Corso corso=new Corso(corsoTemp[1],null,corsoTemp[0],null);
     	txtOutput.clear();
-    	List<Studente> studentiIscrittiAlCorso= new LinkedList<Studente>(corsoDB.getStudentiIscrittiAlCorso(corso));
+    	List<Studente> studentiIscrittiAlCorso= new LinkedList<Studente>(model.getStudentiIscrittiAlCorso(corso));
     	if(studentiIscrittiAlCorso.size()==0) {//se la lista è vuota significa che non ci sono studenti iscritti a questo corso
     		txtOutput.setText("Non ci sono studenti iscritti a questo corso");
     		return;
@@ -145,19 +144,19 @@ public class FXMLController {
     		txtOutput.setText("Inserire una matricola composta da SOLE cifre");
     	}
     	
-    	s=studenteDB.getStudente(matricola);//Interrogo DB per ottenere lo studente
+    	s=model.getStudente(matricola);//Interrogo DB per ottenere lo studente
     	if(s==null) {//se lo studente ritorno è null allora la matricola non c'è nel DB
     		txtOutput.setText("La matricola inserita non corrisponde ad alcuno studente");
     		return;
     	}
     	if(boxChoice.getValue()!=null) {//Controllo se uno studente è iscritto ad un determinato corso
     		String nomeCorso= boxChoice.getValue();
-    		if(studenteDB.isStudenteIscrittoAlCorso(matricola, corso)) {
+    		if(model.isStudenteIscrittoAlCorso(matricola, corso)) {
     			txtOutput.setText("Studente gia' iscritto a questo corso");
         		return;
     		}
     	}
-    	if(corsoDB.iscriviStudenteACorso(s, corso))
+    	if(model.iscriviStudenteACorso(s, corso))
     		txtOutput.setText("Studente iscritto con successo");
     }
 
@@ -181,7 +180,7 @@ public class FXMLController {
     		e.printStackTrace();
     		txtOutput.setText("Inserire una matricola composta da 6 cifre");
     	}
-    	s=studenteDB.getStudente(matricola);
+    	s=model.getStudente(matricola);
     	if(s==null) {
     		txtOutput.setText("La matricola inserita non corrisponde ad alcuno studente");
     		return;
@@ -192,7 +191,7 @@ public class FXMLController {
     
     private void loadData() {
     	List<String> corsi=new ArrayList<String>();
-    	for(Corso delDB: corsoDB.getTuttiICorsi()) {
+    	for(Corso delDB: model.getTuttiICorsi()) {
     		corsi.add(delDB.getNome()+"-"+delDB.getCodice());
     	}
     	observList.addAll(corsi);
@@ -212,4 +211,9 @@ public class FXMLController {
         assert txtOutput != null : "fx:id=\"txtOutput\" was not injected: check your FXML file 'Scene.fxml'.";
         assert btnReset != null : "fx:id=\"btnReset\" was not injected: check your FXML file 'Scene.fxml'.";
     }
+
+	public void setModel(Model model) {
+		this.model=model;
+		
+	}
 }

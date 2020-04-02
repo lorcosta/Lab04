@@ -70,12 +70,12 @@ public class CorsoDAO {
 	public List<Studente> getStudentiIscrittiAlCorso(Corso corso) {
 		final String sql= "SELECT s.matricola,s.nome,s.cognome,s.CDS "
 				+ "FROM studente s, iscrizione i, corso c "
-				+ "WHERE s.matricola=i.matricola AND i.codins=c.codins AND c.nome=?";
+				+ "WHERE s.matricola=i.matricola AND i.codins=c.codins AND c.codins=?";
 		List<Studente> studentiIscritti= new LinkedList<Studente>();
 		try {
 			Connection conn=ConnectDB.getConnection();
 			PreparedStatement st=conn.prepareStatement(sql);
-			st.setString(1, corso.getNome());
+			st.setString(1, corso.getCodice());
 			ResultSet rs=st.executeQuery();
 			
 			while(rs.next()) {
@@ -122,31 +122,3 @@ public class CorsoDAO {
 		return ritorno;
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
