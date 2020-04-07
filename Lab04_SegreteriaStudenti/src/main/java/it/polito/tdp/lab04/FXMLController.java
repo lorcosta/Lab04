@@ -98,43 +98,56 @@ public class FXMLController {
     		txtOutput.setText("Lo studente non è iscritto ad alcun corso");
     		return;
     	}
+    	StringBuilder sb= new StringBuilder();
     	for(Corso c:corsiIscritto) {//Se lo studente è presente visualizzo tutti i corsi ai quali è iscritto
-    		txtOutput.appendText(c.toString()+"\n");
+    		sb.append(String.format("%-10s",c.getCodice()));
+    		sb.append(String.format("%-20s",c.getNome()));
+    		sb.append(String.format("%-20s",c.getCrediti()));
+    		sb.append(String.format("%-10s",c.getPd()));
+    		sb.append("\n");
+    		txtOutput.appendText(sb.toString());
     	}
     }
 
     @FXML
     void CercaIscrittiCorso(ActionEvent event) {
     	String corsoString=boxChoice.getValue();
+    	if(boxChoice.getValue()==null) {
+    		txtOutput.setText("Selezionare un corso");
+    		return;
+    	}
     	String[]corsoTemp=corsoString.split("-");
     	Corso corso=new Corso(corsoTemp[1],null,corsoTemp[0],null);
     	txtOutput.clear();
+    	txtNomeStudente.clear();
+    	txtCognomeSTudente.clear();
     	List<Studente> studentiIscrittiAlCorso= new LinkedList<Studente>(model.getStudentiIscrittiAlCorso(corso));
     	if(studentiIscrittiAlCorso.size()==0) {//se la lista è vuota significa che non ci sono studenti iscritti a questo corso
     		txtOutput.setText("Non ci sono studenti iscritti a questo corso");
     		return;
     	}
+    	StringBuilder sb= new StringBuilder();
     	for(Studente s:studentiIscrittiAlCorso) {
-    		String nome=String.format("%-10s",s.getNome());
-    		String cognome=String.format("%-30s",s.getCognome());
-    		String matr=String.format("%-30s",s.getMatricola());
-    		String CDS=String.format("%-30s",s.getCDS());
-    		String strBuilder=matr+" "+nome+" "+cognome+" "+CDS;
-    		txtOutput.appendText(strBuilder+"\n");
+    		sb.append(String.format("%-10s",s.getNome()));
+    		sb.append(String.format("%-20s",s.getCognome()));
+    		sb.append(String.format("%-20s",s.getMatricola()));
+    		sb.append(String.format("%-10s",s.getCDS()));
+    		sb.append("\n");
+    		txtOutput.appendText(sb.toString());
     	}
-
     }
 
     @FXML
     void IscriviStudente(ActionEvent event) {
-    	String corsoString=boxChoice.getValue();
-    	String[]corsoTemp=corsoString.split("-");
-    	Corso corso=new Corso(corsoTemp[1],null,corsoTemp[0],null);
     	Studente s;
+    	Corso corso=null;
     	String matrString= txtIdStudente.getText();
     	Integer matricola = null;
     	if(matrString.length()!=6) {//Controllo che numero di caratteri sia corretto
     		txtOutput.setText("Matricola inserita non valida! Inserire una matricola composta da 6 cifre");
+    		return;
+    	}else if(boxChoice.getValue()==null) {
+    		txtOutput.setText("Selezionare un corso");
     		return;
     	}
     	try {//Provo a trasformare la matricola in un intero, così se ci sono lettere restituisco errore
@@ -150,7 +163,9 @@ public class FXMLController {
     		return;
     	}
     	if(boxChoice.getValue()!=null) {//Controllo se uno studente è iscritto ad un determinato corso
-    		String nomeCorso= boxChoice.getValue();
+    		String corsoString=boxChoice.getValue();
+        	String[]corsoTemp=corsoString.split("-");
+        	corso=new Corso(corsoTemp[1],null,corsoTemp[0],null);
     		if(model.isStudenteIscrittoAlCorso(matricola, corso)) {
     			txtOutput.setText("Studente gia' iscritto a questo corso");
         		return;
@@ -171,6 +186,9 @@ public class FXMLController {
 
     @FXML
     void doShowNomeCognomeStudente(ActionEvent event) {
+    	txtNomeStudente.clear();
+    	txtCognomeSTudente.clear();
+    	txtOutput.clear();
     	Studente s;
     	String matrString= txtIdStudente.getText();
     	Integer matricola = null;
